@@ -1,6 +1,9 @@
 package io.seata.sample.controller;
 
+import io.seata.sample.feign.OrderFeignClient;
+import io.seata.sample.feign.StorageFeignClient;
 import io.seata.sample.service.BusinessService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,25 @@ public class BusinessController {
             return exx.getMessage();
         }
         return "全局事务提交";
+    }
+
+    @RequestMapping(value = "/index", produces = "application/json")
+    @GlobalTransactional
+    public String purchaseCommit11() {
+        return "ceshi";
+    }
+
+    @Autowired
+    private StorageFeignClient storageFeignClient;
+    @Autowired
+    private OrderFeignClient orderFeignClient;
+
+    @RequestMapping(value = "/demo")
+    public String demo() {
+        storageFeignClient.deduct("100000", 30);
+
+        orderFeignClient.create("U100000", "C100000", 30);
+        return "ceshi";
     }
 
     /**

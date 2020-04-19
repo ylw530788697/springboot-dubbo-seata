@@ -33,7 +33,7 @@ public class BusinessService {
      * @param commodityCode
      * @param orderCount
      */
-    @GlobalTransactional
+    @GlobalTransactional(timeoutMills = 300000, name = "dubbo-gts-seata-example")
     public void purchase(String userId, String commodityCode, int orderCount) {
         storageFeignClient.deduct(commodityCode, orderCount);
 
